@@ -109,7 +109,7 @@ Your Zuno app is live at `https://zuno.vercel.app`
 
 **Srinivas Malempati**
 QA Manager with 17 years experience • Solo AI app builder
-- GitHub: [github.com/msrinivas6](https://github.com/msrinivas6)
+- GitHub: [github.com/msrinivas6](https://github.com/srinivas-malempati)
 - LinkedIn: [linkedin.com/in/srinivas-malempati](https://linkedin.com/in/srinivas-malempati)
 
 ---
