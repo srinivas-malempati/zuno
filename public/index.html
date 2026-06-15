@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>Zuno ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Nunito',sans-serif;overflow-x:hidden;}
+  button{cursor:pointer;border:none;font-family:'Nunito',sans-serif;}
+  button:active{transform:scale(.92)!important;transition:transform .1s;}
+  input{font-family:'Nunito',sans-serif;border:none;outline:none;}
+  .screen{display:none;min-height:100vh;}
+  .screen.active{display:block;}
+  @keyframes bob    {0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  @keyframes pop    {0%{transform:scale(.4);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+  @keyframes up     {from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fall   {0%{transform:translateY(-30px) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(480deg);opacity:0}}
+  @keyframes pulse  {0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+  @keyframes shake  {0%,100%{transform:translateX(0)}25%,75%{transform:translateX(-6px)}50%{transform:translateX(6px)}}
+  @keyframes spin   {from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  @keyframes glow   {0%,100%{box-shadow:0 0 20px rgba(255,210,0,.4)}50%{box-shadow:0 0 40px rgba(255,210,0,.8)}}
+  .zuri{border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFE566,#FFD93D);display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:bob 2s ease-in-out infinite,glow 2s ease-in-out infinite;}
+  .big-btn{border-radius:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:100%;transition:transform .15s;font-family:'Fredoka One',cursive;color:#fff;font-weight:900;}
+  .big-btn:active{transform:scale(.93)!important;}
+  .choice-btn{background:linear-gradient(135deg,#F0EEFF,#E8DFFF);color:#A855F7;border:3px solid #DDD4FF;border-radius:22px;padding:20px 8px;font-weight:900;font-family:'Fredoka One',cursive;box-shadow:0 4px 14px rgba(168,85,247,.15);width:100%;transition:all .15s;}
+  .next-btn{width:100%;background:linear-gradient(135deg,#6BCB77,#4CAF50);color:#fff;border-radius:18px;padding:16px;font-size:20px;font-weight:900;font-family:'Fredoka One',cursive;box-shadow:0 5px 16px rgba(107,203,119,.4);animation:pop .4s ease;}
+  .back-btn{background:rgba(255,255,255,.9);border-radius:999px;width:46px;height:46px;font-size:20px;box-shadow:0 3px 12px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .progress-bar{background:rgba(255,255,255,.5);border-radius:999px;height:12px;overflow:hidden;}
+  .progress-fill{height:100%;border-radius:999px;transition:width .5s ease;}
+  .star-badge{background:linear-gradient(135deg,#FFD93D,#FF6B35);border-radius:999px;padding:8px 18px;color:#fff;font-weight:900;font-family:'Fredoka One',cursive;box-shadow:0 3px 12px rgba(255,107,53,.35);display:inline-flex;align-items:center;gap:6px;}
+  .confetti-piece{position:fixed;top:-20px;pointer-events:none;z-index:999;}
+  .mic-btn{background:linear-gradient(135deg,#FF6B35,#FF9A5C);color:#fff;border-radius:14px;padding:0 16px;font-size:22px;flex-shrink:0;box-shadow:0 4px 12px rgba(255,107,53,.4);min-height:54px;display:flex;align-items:center;}
+  @keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,23,68,.5)}70%{box-shadow:0 0 0 14px rgba(255,23,68,0)}}
+  .mic-btn.listening{background:linear-gradient(135deg,#FF1744,#FF6B6B);animation:micPulse 1s infinite;}
+</style>
+</head>
+<body>
+
+<!-- ══ HOME ══════════════════════════════════════════════════════════ -->
+<div id="home" class="screen active" style="background:linear-gradient(160deg,#FFF8F0 0%,#EEF4FF 55%,#F5EEFF 100%);padding:32px 20px 60px;min-height:100vh;">
+  <div style="max-width:440px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:24px;">
+
+    <!-- Logo -->
+    <div style="text-align:center;animation:up .4s ease;">
+      <div style="font-size:52px;font-family:'Fredoka One',cursive;background:linear-gradient(135deg,#FF6B35,#A855F7,#4D96FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1;">Zuno ✨</div>
+    </div>
+
+    <!-- Zuri big and welcoming -->
+    <div style="animation:up .45s ease;display:flex;flex-direction:column;align-items:center;gap:12px;">
+      <div class="zuri" style="width:110px;height:110px;font-size:58px;" id="home-zuri">😊</div>
+      <div style="font-size:22px;font-weight:900;color:#2D2D2D;font-family:'Fredoka One',cursive;text-align:center;">Hi! I'm Zuri! 👋</div>
+    </div>
+
+    <!-- Stars -->
+    <div id="home-stars" style="display:none;animation:pop .4s ease;">
+      <div class="star-badge" style="font-size:20px;">⭐ <span id="home-stars-count">0</span> Stars!</div>
+    </div>
+
+    <!-- TWO BIG BUTTONS — Math and Spelling -->
+    <div style="width:100%;display:flex;flex-direction:column;gap:16px;animation:up .5s ease;">
+      <button class="big-btn" onclick="goToGrade('Math')" style="background:linear-gradient(135deg,#FF6B35,#FF9A5C);padding:28px 16px;font-size:26px;box-shadow:0 10px 32px rgba(255,107,53,.45);animation:pulse 2s ease-in-out infinite;">
+        <span style="font-size:64px;">🔢</span>
+        Math
+      </button>
+      <button class="big-btn" onclick="goToGrade('Spelling')" style="background:linear-gradient(135deg,#FF6B9D,#FF8FB0);padding:28px 16px;font-size:26px;box-shadow:0 10px 32px rgba(255,107,157,.45);animation:pulse 2s ease-in-out .4s infinite;">
+        <span style="font-size:64px;">✏️</span>
+        Spelling
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ GRADE PICKER ═══════════════════════════════════════════════════ -->
+<div id="grade" class="screen" style="padding:24px 20px 60px;">
+  <div style="max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:16px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="back-btn" onclick="showScreen('home')">←</button>
+      <div id="grade-title" style="font-size:22px;font-weight:900;color:#2D2D2D;font-family:'Fredoka One',cursive;"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;background:#fff;border-radius:24px;padding:18px;box-shadow:0 4px 20px rgba(0,0,0,.07);">
+      <div class="zuri" style="width:64px;height:64px;font-size:34px;">🤩</div>
+      <div style="font-size:20px;font-weight:900;color:#555;font-family:'Fredoka One',cursive;">What grade are you in? 🎓</div>
+    </div>
+    <button onclick="goToDiff('K')"   style="background:linear-gradient(135deg,#6BCB77,#4CAF50);color:#fff;border-radius:24px;padding:24px 20px;display:flex;align-items:center;gap:16px;box-shadow:0 8px 24px rgba(107,203,119,.4);width:100%;font-family:'Fredoka One',cursive;"><span style="font-size:52px;">🌱</span><span style="font-size:26px;font-weight:900;">Kindergarten</span><span style="margin-left:auto;font-size:28px;">→</span></button>
+    <button onclick="goToDiff('1st')" style="background:linear-gradient(135deg,#4D96FF,#2979FF);color:#fff;border-radius:24px;padding:24px 20px;display:flex;align-items:center;gap:16px;box-shadow:0 8px 24px rgba(77,150,255,.4);width:100%;font-family:'Fredoka One',cursive;"><span style="font-size:52px;">🚀</span><span style="font-size:26px;font-weight:900;">Grade 1</span><span style="margin-left:auto;font-size:28px;">→</span></button>
+    <button onclick="goToDiff('2nd')" style="background:linear-gradient(135deg,#A855F7,#7C3AED);color:#fff;border-radius:24px;padding:24px 20px;display:flex;align-items:center;gap:16px;box-shadow:0 8px 24px rgba(168,85,247,.4);width:100%;font-family:'Fredoka One',cursive;"><span style="font-size:52px;">🦁</span><span style="font-size:26px;font-weight:900;">Grade 2</span><span style="margin-left:auto;font-size:28px;">→</span></button>
+  </div>
+</div>
+
+<!-- ══ DIFFICULTY PICKER ══════════════════════════════════════════════ -->
+<div id="diff" class="screen" style="padding:24px 20px 60px;">
+  <div style="max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:16px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="back-btn" onclick="showScreen('grade')">←</button>
+      <div id="diff-title" style="font-size:20px;font-weight:900;color:#2D2D2D;font-family:'Fredoka One',cursive;"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;background:#fff;border-radius:24px;padding:18px;box-shadow:0 4px 20px rgba(0,0,0,.07);">
+      <div class="zuri" style="width:64px;height:64px;font-size:34px;">💪</div>
+      <div style="font-size:20px;font-weight:900;color:#555;font-family:'Fredoka One',cursive;">How hard? Pick your level!</div>
+    </div>
+    <button onclick="startQuiz('easy')"   style="background:linear-gradient(135deg,#6BCB77,#4CAF50);color:#fff;border-radius:24px;padding:22px 20px;display:flex;align-items:center;gap:16px;box-shadow:0 8px 24px rgba(107,203,119,.4);width:100%;font-family:'Fredoka One',cursive;"><span style="font-size:48px;">🌱</span><div style="text-align:left;"><div style="font-size:24px;font-weight:900;">Easy</div><div style="font-size:14px;opacity:.9;font-family:'Nunito',sans-serif;font-weight:700;">Simple &amp; fun!</div></div><span style="margin-left:auto;font-size:28px;">→</span></button>
+    <button onclick="startQuiz('medium')" style="background:linear-gradient(135deg,#4D96FF,#2979FF);color:#fff;border-radius:24px;padding:22px 20px;display:flex;align-items:center;gap:16px;box-shadow:0 8px 24px rgba(77,150,255,.4);width:100%;font-family:'Fredoka One',cursive;"><span style="font-size:48px;">🚀</span><div style="text-align:left;"><div style="font-size:24px;font-weight:900;">Medium</div><div style="font-size:14px;opacity:.9;font-family:'Nunito',sans-serif;font-weight:700;">A little harder</div></div><span style="margin-left:auto;font-size:28px;">→</span></button>
+    <button onclick="startQuiz('hard')"   style="background:linear-gradient(135deg,#FF6B35,#FF9A5C);color:#fff;border-radius:24px;padding:22px 20px;display:flex;align-items:center;gap:16px;box-shadow:0 8px 24px rgba(255,107,53,.4);width:100%;font-family:'Fredoka One',cursive;"><span style="font-size:48px;">🔥</span><div style="text-align:left;"><div style="font-size:24px;font-weight:900;">Hard</div><div style="font-size:14px;opacity:.9;font-family:'Nunito',sans-serif;font-weight:700;">Challenge me!</div></div><span style="margin-left:auto;font-size:28px;">→</span></button>
+  </div>
+</div>
+
+<!-- ══ MATH QUIZ ══════════════════════════════════════════════════════ -->
+<div id="math" class="screen" style="background:linear-gradient(150deg,#FFF4E6,#FFE8D0);padding:20px 16px 60px;">
+  <div style="max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:14px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <button class="back-btn" onclick="showScreen('diff')">←</button>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span id="math-streak" style="display:none;background:linear-gradient(135deg,#FF6B35,#FFD93D);border-radius:999px;padding:5px 14px;color:#fff;font-weight:900;font-size:14px;font-family:'Fredoka One',cursive;"></span>
+        <button onclick="zuriSpeak(lastMathQ)" style="background:rgba(255,107,53,.12);border:2px solid #FF6B35;color:#FF6B35;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:800;">🔊 Hear</button>
+        <div class="star-badge" id="math-stars-badge" style="font-size:15px;">⭐ 0</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="background:#FF6B35;color:#fff;border-radius:999px;padding:5px 14px;font-size:13px;font-weight:800;font-family:'Fredoka One',cursive;">🔢 Math</span>
+      <span id="math-diff-tag" style="color:#fff;border-radius:999px;padding:5px 14px;font-size:13px;font-weight:800;font-family:'Fredoka One',cursive;"></span>
+      <span id="math-progress-tag" style="background:#eee;color:#888;border-radius:999px;padding:5px 14px;font-size:13px;font-weight:800;"></span>
+    </div>
+    <div style="background:#fff;border-radius:28px;padding:22px 18px;box-shadow:0 6px 28px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:18px;">
+      <div style="display:flex;gap:12px;align-items:center;">
+        <div class="zuri" id="math-zuri" style="width:58px;height:58px;font-size:30px;">😊</div>
+        <div id="math-bubble" style="flex:1;background:#F5F0FF;border-radius:4px 20px 20px 20px;padding:12px 16px;font-size:16px;font-weight:800;color:#2D2D2D;border:2px solid #DDD4FF;min-height:46px;display:flex;align-items:center;"></div>
+      </div>
+      <div id="math-equation" style="background:linear-gradient(135deg,#FFF9F0,#FFF3E0);border-radius:22px;padding:18px 14px;display:flex;flex-direction:column;gap:14px;border:2px solid #FFE0B2;">
+        <div id="left-fruits"  style="background:rgba(255,255,255,.8);border-radius:16px;padding:10px;display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:52px;align-items:center;"></div>
+        <div style="display:flex;justify-content:center;">
+          <div id="op-btn" style="width:78px;height:78px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:52px;font-weight:900;color:#fff;font-family:'Fredoka One',cursive;line-height:1;animation:pulse 1.5s ease-in-out infinite;"></div>
+        </div>
+        <div id="right-fruits" style="background:rgba(255,255,255,.8);border-radius:16px;padding:10px;display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:52px;align-items:center;"></div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px;">
+          <div style="font-size:38px;font-weight:900;color:#ccc;font-family:'Fredoka One',cursive;">=</div>
+          <div id="answer-box" style="width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,#E8E0FF,#DDD4FF);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#A855F7;font-family:'Fredoka One',cursive;transition:all .3s;">?</div>
+        </div>
+      </div>
+      <div id="choices-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"></div>
+      <button id="math-next-btn" class="next-btn" onclick="mathNext()" style="display:none;"></button>
+    </div>
+    <div class="progress-bar"><div id="math-progress-fill" class="progress-fill" style="background:linear-gradient(135deg,#FF6B35,#FFD93D);width:0%;"></div></div>
+  </div>
+</div>
+
+<!-- ══ SPELLING QUIZ ══════════════════════════════════════════════════ -->
+<div id="spelling" class="screen" style="background:linear-gradient(150deg,#FFF0F5,#FFE0EC);padding:20px 16px 60px;">
+  <div style="max-width:440px;margin:0 auto;display:flex;flex-direction:column;gap:14px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <button class="back-btn" onclick="showScreen('diff')">←</button>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span id="spell-streak" style="display:none;background:linear-gradient(135deg,#FF6B35,#FFD93D);border-radius:999px;padding:5px 14px;color:#fff;font-weight:900;font-size:14px;font-family:'Fredoka One',cursive;"></span>
+        <div class="star-badge" id="spell-stars-badge" style="font-size:15px;">⭐ 0</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="background:#FF6B9D;color:#fff;border-radius:999px;padding:5px 14px;font-size:13px;font-weight:800;font-family:'Fredoka One',cursive;">✏️ Spelling</span>
+      <span id="spell-diff-tag" style="color:#fff;border-radius:999px;padding:5px 14px;font-size:13px;font-weight:800;font-family:'Fredoka One',cursive;"></span>
+      <span id="spell-progress-tag" style="background:#eee;color:#888;border-radius:999px;padding:5px 14px;font-size:13px;font-weight:800;"></span>
+    </div>
+    <div style="background:#fff;border-radius:28px;padding:22px 18px;box-shadow:0 6px 28px rgba(0,0,0,.08);display:flex;flex-direction:column;gap:16px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div class="zuri" id="spell-zuri" style="width:58px;height:58px;font-size:30px;">😊</div>
+        <div id="spell-bubble" style="flex:1;background:#FFF0F5;border-radius:4px 20px 20px 20px;padding:12px 16px;font-size:16px;font-weight:800;color:#2D2D2D;border:2px solid #FFD0E8;"></div>
+      </div>
+      <div id="spell-emoji" style="text-align:center;font-size:100px;line-height:1.2;animation:bob 2s infinite;"></div>
+      <div id="spell-hint-box" style="display:none;flex-direction:row;align-items:center;gap:10px;background:#FFFDE7;border-radius:16px;padding:12px 14px;border:2px dashed #FFD93D;">
+        <span style="font-size:24px;">💡</span>
+        <div>
+          <div style="font-weight:900;color:#FF6B35;font-size:12px;margin-bottom:2px;">Zuri's Hint!</div>
+          <div id="spell-hint-text" style="font-weight:800;color:#555;font-size:17px;letter-spacing:3px;"></div>
+        </div>
+      </div>
+      <div id="spell-input-row" style="display:flex;gap:10px;">
+        <input id="spell-input" type="text" placeholder="Type here..." onkeydown="if(event.key==='Enter')checkSpelling()" style="flex:1;padding:14px 16px;border-radius:16px;border:3px solid #FFD0E8;font-size:20px;font-weight:800;color:#2D2D2D;background:#FAFAFA;text-transform:uppercase;"/>
+        <button onclick="checkSpelling()" style="background:linear-gradient(135deg,#FF6B9D,#FF8FB0);color:#fff;border-radius:16px;padding:0 22px;font-size:24px;font-weight:900;flex-shrink:0;box-shadow:0 4px 12px rgba(255,107,157,.4);min-height:54px;">✓</button>
+        <button id="mic-spell-btn" class="mic-btn" onclick="toggleMic()">🎤</button>
+      </div>
+      <button id="spell-next-btn" class="next-btn" onclick="spellNext()" style="display:none;"></button>
+      <button id="spell-hint-btn" onclick="showSpellHint()" style="display:none;background:#fff;color:#FF6B9D;border:3px dashed #FF6B9D;border-radius:16px;padding:12px;font-size:15px;font-weight:800;">💡 Show me a hint!</button>
+    </div>
+    <div class="progress-bar"><div id="spell-progress-fill" class="progress-fill" style="background:linear-gradient(135deg,#FF6B9D,#FFD93D);width:0%;"></div></div>
+  </div>
+</div>
+
+<!-- ══ DONE / RESULTS ════════════════════════════════════════════════ -->
+<div id="done" class="screen" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;">
+  <div style="max-width:400px;width:100%;background:#fff;border-radius:36px;padding:36px 28px;box-shadow:0 10px 48px rgba(0,0,0,.1);text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px;animation:pop .5s ease;">
+    <div style="font-size:88px;animation:bob 1.5s infinite;">🏆</div>
+    <div style="font-size:30px;font-weight:900;color:#2D2D2D;font-family:'Fredoka One',cursive;line-height:1.2;">You're Amazing!</div>
+    <div id="done-stars-display" style="font-size:48px;font-family:'Fredoka One',cursive;color:#FF6B35;"></div>
+    <div id="done-msg" style="font-size:18px;font-weight:800;color:#888;"></div>
+    <button onclick="showScreen('home')" style="width:100%;background:linear-gradient(135deg,#FF6B35,#FF9A5C);color:#fff;border-radius:20px;padding:18px;font-size:22px;font-weight:900;font-family:'Fredoka One',cursive;box-shadow:0 6px 20px rgba(255,107,53,.4);">
+      Play Again! 🎉
+    </button>
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────
+const MATH_RANGES={
+  K:{
+    easy:  {ops:["+","-"],minA:1,maxA:4,minB:1,maxB:3,maxAns:6},
+    medium:{ops:["+","-"],minA:2,maxA:6,minB:1,maxB:4,maxAns:9},
+    hard:  {ops:["+","-"],minA:4,maxA:9,minB:1,maxB:5,maxAns:10},
+  },
+  "1st":{
+    easy:  {ops:["+","-"],minA:4,maxA:10,minB:1,maxB:5,maxAns:15},
+    medium:{ops:["+","-"],minA:6,maxA:13,minB:2,maxB:6,maxAns:18},
+    hard:  {ops:["+","-"],minA:11,maxA:50,minB:5,maxB:25,maxAns:99},
+  },
+  "2nd":{
+    easy:  {ops:["+","-"],minA:10,maxA:20,minB:3,maxB:9,maxAns:30},
+    medium:{ops:["+","-","×"],minA:10,maxA:50,minB:2,maxB:9,maxAns:99},
+    hard:  {ops:["×","÷"],minA:2,maxA:9,minB:2,maxB:9,maxAns:81},
+  },
+};
+
+const FRUITS=["🍎","🍌","🍊","🍇","🍓","🍒","🍑","🥝","🍋","🥭"];
+
+const SPELL_Q={
+  K:{
+    easy:  [{word:"CAT",hint:"C-A-T",img:"🐱"},{word:"DOG",hint:"D-O-G",img:"🐶"},{word:"SUN",hint:"S-U-N",img:"☀️"},{word:"HAT",hint:"H-A-T",img:"🎩"},{word:"CUP",hint:"C-U-P",img:"☕"},{word:"BUS",hint:"B-U-S",img:"🚌"},{word:"ANT",hint:"A-N-T",img:"🐜"},{word:"EGG",hint:"E-G-G",img:"🥚"},{word:"PIG",hint:"P-I-G",img:"🐷"},{word:"COW",hint:"C-O-W",img:"🐄"},{word:"BEE",hint:"B-E-E",img:"🐝"},{word:"OWL",hint:"O-W-L",img:"🦉"},{word:"FOX",hint:"F-O-X",img:"🦊"},{word:"BAT",hint:"B-A-T",img:"🦇"},{word:"HEN",hint:"H-E-N",img:"🐔"},{word:"NET",hint:"N-E-T",img:"🥅"}],
+    medium:[{word:"CAKE",hint:"C-A-K-E",img:"🎂"},{word:"FISH",hint:"F-I-S-H",img:"🐟"},{word:"FROG",hint:"F-R-O-G",img:"🐸"},{word:"STAR",hint:"S-T-A-R",img:"⭐"},{word:"BIRD",hint:"B-I-R-D",img:"🐦"},{word:"MILK",hint:"M-I-L-K",img:"🥛"},{word:"TREE",hint:"T-R-E-E",img:"🌳"},{word:"BALL",hint:"B-A-L-L",img:"⚽"},{word:"DUCK",hint:"D-U-C-K",img:"🦆"},{word:"KITE",hint:"K-I-T-E",img:"🪁"},{word:"LAMP",hint:"L-A-M-P",img:"💡"},{word:"NEST",hint:"N-E-S-T",img:"🪺"},{word:"SHIP",hint:"S-H-I-P",img:"🚢"},{word:"WIND",hint:"W-I-N-D",img:"💨"},{word:"DRUM",hint:"D-R-U-M",img:"🥁"},{word:"PLUM",hint:"P-L-U-M",img:"🫐"}],
+    hard:  [{word:"MOON",hint:"M-O-O-N",img:"🌙"},{word:"RAIN",hint:"R-A-I-N",img:"🌧️"},{word:"BOOK",hint:"B-O-O-K",img:"📚"},{word:"CLAP",hint:"C-L-A-P",img:"👏"},{word:"CRAB",hint:"C-R-A-B",img:"🦀"},{word:"FLAG",hint:"F-L-A-G",img:"🚩"},{word:"SKIP",hint:"S-K-I-P",img:"⏭️"},{word:"STOP",hint:"S-T-O-P",img:"🛑"},{word:"SNAP",hint:"S-N-A-P",img:"👌"},{word:"SPIN",hint:"S-P-I-N",img:"🌀"},{word:"TRIP",hint:"T-R-I-P",img:"✈️"},{word:"SLIM",hint:"S-L-I-M",img:"📏"},{word:"GLAD",hint:"G-L-A-D",img:"😊"},{word:"GRAB",hint:"G-R-A-B",img:"✋"},{word:"FROG",hint:"F-R-O-G",img:"🐸"},{word:"CRAB",hint:"C-R-A-B",img:"🦀"}],
+  },
+  "1st":{
+    easy:  [{word:"RAIN",hint:"R-A-I-N",img:"🌧️"},{word:"CAKE",hint:"C-A-K-E",img:"🎂"},{word:"BOOK",hint:"B-O-O-K",img:"📚"},{word:"MOON",hint:"M-O-O-N",img:"🌙"},{word:"BIRD",hint:"B-I-R-D",img:"🐦"},{word:"FROG",hint:"F-R-O-G",img:"🐸"},{word:"STAR",hint:"S-T-A-R",img:"⭐"},{word:"FISH",hint:"F-I-S-H",img:"🐟"},{word:"BOAT",hint:"B-O-A-T",img:"⛵"},{word:"COAT",hint:"C-O-A-T",img:"🧥"},{word:"GOAT",hint:"G-O-A-T",img:"🐐"},{word:"SOAP",hint:"S-O-A-P",img:"🧼"},{word:"LEAF",hint:"L-E-A-F",img:"🍃"},{word:"ROAD",hint:"R-O-A-D",img:"🛣️"},{word:"BEAD",hint:"B-E-A-D",img:"📿"},{word:"TOAD",hint:"T-O-A-D",img:"🐸"}],
+    medium:[{word:"TRAIN",hint:"T-R-A-I-N",img:"🚂"},{word:"GRAPE",hint:"G-R-A-P-E",img:"🍇"},{word:"PLANE",hint:"P-L-A-N-E",img:"✈️"},{word:"CLOUD",hint:"C-L-O-U-D",img:"☁️"},{word:"SNAKE",hint:"S-N-A-K-E",img:"🐍"},{word:"SPOON",hint:"S-P-O-O-N",img:"🥄"},{word:"TIGER",hint:"T-I-G-E-R",img:"🐯"},{word:"WHALE",hint:"W-H-A-L-E",img:"🐋"},{word:"CHAIR",hint:"C-H-A-I-R",img:"🪑"},{word:"DRINK",hint:"D-R-I-N-K",img:"🥤"},{word:"FLUTE",hint:"F-L-U-T-E",img:"🎵"},{word:"FROST",hint:"F-R-O-S-T",img:"❄️"},{word:"CHESS",hint:"C-H-E-S-S",img:"♟️"},{word:"CHEST",hint:"C-H-E-S-T",img:"📦"},{word:"CHILD",hint:"C-H-I-L-D",img:"👶"},{word:"STRAW",hint:"S-T-R-A-W",img:"🥤"}],
+    hard:  [{word:"BRIDGE",hint:"B-R-I-D-G-E",img:"🌉"},{word:"CASTLE",hint:"C-A-S-T-L-E",img:"🏰"},{word:"FLOWER",hint:"F-L-O-W-E-R",img:"🌺"},{word:"GARDEN",hint:"G-A-R-D-E-N",img:"🌻"},{word:"JUNGLE",hint:"J-U-N-G-L-E",img:"🌴"},{word:"KITTEN",hint:"K-I-T-T-E-N",img:"🐱"},{word:"MONKEY",hint:"M-O-N-K-E-Y",img:"🐒"},{word:"PURPLE",hint:"P-U-R-P-L-E",img:"💜"},{word:"RABBIT",hint:"R-A-B-B-I-T",img:"🐰"},{word:"ROCKET",hint:"R-O-C-K-E-T",img:"🚀"},{word:"SCHOOL",hint:"S-C-H-O-O-L",img:"🏫"},{word:"SPRING",hint:"S-P-R-I-N-G",img:"🌱"},{word:"STREET",hint:"S-T-R-E-E-T",img:"🛣️"},{word:"STRONG",hint:"S-T-R-O-N-G",img:"💪"},{word:"TURTLE",hint:"T-U-R-T-L-E",img:"🐢"},{word:"SISTER",hint:"S-I-S-T-E-R",img:"👧"}],
+  },
+  "2nd":{
+    easy:  [{word:"MANGO",hint:"M-A-N-G-O",img:"🥭"},{word:"HAPPY",hint:"H-A-P-P-Y",img:"😊"},{word:"WATER",hint:"W-A-T-E-R",img:"💧"},{word:"DANCE",hint:"D-A-N-C-E",img:"💃"},{word:"LIGHT",hint:"L-I-G-H-T",img:"💡"},{word:"NIGHT",hint:"N-I-G-H-T",img:"🌙"},{word:"SMILE",hint:"S-M-I-L-E",img:"😄"},{word:"MUSIC",hint:"M-U-S-I-C",img:"🎵"},{word:"APPLE",hint:"A-P-P-L-E",img:"🍎"},{word:"BRAVE",hint:"B-R-A-V-E",img:"🦁"},{word:"CATCH",hint:"C-A-T-C-H",img:"⚾"},{word:"CLEAN",hint:"C-L-E-A-N",img:"🧹"},{word:"CLIMB",hint:"C-L-I-M-B",img:"🧗"},{word:"CLOUD",hint:"C-L-O-U-D",img:"☁️"},{word:"COACH",hint:"C-O-A-C-H",img:"🏆"},{word:"STORM",hint:"S-T-O-R-M",img:"⛈️"}],
+    medium:[{word:"CRICKET",hint:"C-R-I-C-K-E-T",img:"🏏"},{word:"RAINBOW",hint:"R-A-I-N-B-O-W",img:"🌈"},{word:"CHICKEN",hint:"C-H-I-C-K-E-N",img:"🐔"},{word:"KITCHEN",hint:"K-I-T-C-H-E-N",img:"🍳"},{word:"CAPTAIN",hint:"C-A-P-T-A-I-N",img:"⚓"},{word:"BLANKET",hint:"B-L-A-N-K-E-T",img:"🛏️"},{word:"PRESENT",hint:"P-R-E-S-E-N-T",img:"🎁"},{word:"DOLPHIN",hint:"D-O-L-P-H-I-N",img:"🐬"},{word:"BROTHER",hint:"B-R-O-T-H-E-R",img:"👦"},{word:"CHAPTER",hint:"C-H-A-P-T-E-R",img:"📖"},{word:"CLOTHES",hint:"C-L-O-T-H-E-S",img:"👕"},{word:"COUNTRY",hint:"C-O-U-N-T-R-Y",img:"🌍"},{word:"DESSERT",hint:"D-E-S-S-E-R-T",img:"🍰"},{word:"DRAGONS",hint:"D-R-A-G-O-N-S",img:"🐉"},{word:"CENTURY",hint:"C-E-N-T-U-R-Y",img:"💯"},{word:"CHERISH",hint:"C-H-E-R-I-S-H",img:"❤️"}],
+    hard:  [{word:"ELEPHANT",hint:"E-L-E-P-H-A-N-T",img:"🐘"},{word:"BUTTERFLY",hint:"B-U-T-T-E-R-F-L-Y",img:"🦋"},{word:"PINEAPPLE",hint:"P-I-N-E-A-P-P-L-E",img:"🍍"},{word:"PENGUIN",hint:"P-E-N-G-U-I-N",img:"🐧"},{word:"UMBRELLA",hint:"U-M-B-R-E-L-L-A",img:"☂️"},{word:"TOMORROW",hint:"T-O-M-O-R-R-O-W",img:"📅"},{word:"SANDWICH",hint:"S-A-N-D-W-I-C-H",img:"🥪"},{word:"FESTIVAL",hint:"F-E-S-T-I-V-A-L",img:"🎪"},{word:"BIRTHDAY",hint:"B-I-R-T-H-D-A-Y",img:"🎂"},{word:"CALENDAR",hint:"C-A-L-E-N-D-A-R",img:"📅"},{word:"CHILDREN",hint:"C-H-I-L-D-R-E-N",img:"👧"},{word:"CHAMPION",hint:"C-H-A-M-P-I-O-N",img:"🏆"},{word:"CHEERFUL",hint:"C-H-E-E-R-F-U-L",img:"😄"},{word:"BASEBALL",hint:"B-A-S-E-B-A-L-L",img:"⚾"},{word:"BOOKWORM",hint:"B-O-O-K-W-O-R-M",img:"📚"},{word:"AMAZING",hint:"A-M-A-Z-I-N-G",img:"🤩"}],
+  },
+};
+
+const CHEERS=["Amazing! 🌟","Superstar! ⭐","You did it! 🎉","So smart! 🧠","Fantastic! 🚀","Brilliant! 🥳","High five! ✋","Wonderful! 🌈"];
+const RETRY= ["Try again! 💪","Almost! 🌈","One more try! 🎯","You can do it! ⭐"];
+
+// ── STATE ─────────────────────────────────────────────────────────────
+let currentSubject="Math", currentGrade="1st", currentDiff="easy";
+let mathQueue=[], mathIdx=0, mathSelected=null, mathStreak=0;
+let spellQueue=[], spellIdx=0, spellAttempts=0, spellStreak=0;
+let totalStars=0, sessionCorrect=0, sessionTotal=0;
+let lastMathQ=null;
+let micRecognition=null, micListening=false;
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function makeChoices(ans){
+  const w=new Set(); let t=0;
+  while(w.size<3&&t<100){t++;const d=Math.floor(Math.random()*4)+1;const v=Math.random()<.5?ans+d:ans-d;if(v!==ans&&v>=0)w.add(v);}
+  let fb=1; while(w.size<3){if(fb!==ans)w.add(fb);fb++;}
+  return shuffle([...w,ans]);
+}
+
+function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+
+function generateMathQ(grade,diff){
+  const r=MATH_RANGES[grade][diff];
+  let tries=0;
+  while(tries<50){
+    tries++;
+    const op=r.ops[Math.floor(Math.random()*r.ops.length)];
+    let a,b,ans;
+    if(op==="×"){a=randInt(2,9);b=randInt(2,9);ans=a*b;}
+    else if(op==="÷"){ans=randInt(2,9);b=randInt(2,9);a=ans*b;}
+    else if(op==="+"){a=randInt(r.minA,r.maxA);b=randInt(r.minB,r.maxB);ans=a+b;if(ans>r.maxAns)continue;}
+    else{a=randInt(r.minA,r.maxA);b=randInt(r.minB,Math.min(r.maxB,a));if(b<1)continue;ans=a-b;if(ans<0)continue;}
+    const useFruit=(op==="+"||op==="-")&&a<=10&&b<=10;
+    return{a,b,op,ans,type:useFruit?"fruit":"number",emoji:FRUITS[Math.floor(Math.random()*FRUITS.length)]};
+  }
+  return{a:3,b:2,op:"+",ans:5,type:"fruit",emoji:"🍎"};
+}
+
+function generateMathSet(grade,diff,count=8){
+  const set=[]; const seen=new Set(); let tries=0;
+  while(set.length<count&&tries<200){tries++;const q=generateMathQ(grade,diff);const k=`${q.a}${q.op}${q.b}`;if(!seen.has(k)){seen.add(k);set.push(q);}}
+  return set;
+}
+
+// ── VOICE ─────────────────────────────────────────────────────────────
+function zuriSpeak(text){
+  if(!text||!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.88;u.pitch=1.2;u.volume=1;
+  const voices=window.speechSynthesis.getVoices();
+  const v=voices.find(v=>v.name.includes('Samantha')||v.name.includes('Karen')||v.name.includes('Moira')||(v.lang.startsWith('en')&&v.name.toLowerCase().includes('female')));
+  if(v)u.voice=v;
+  window.speechSynthesis.speak(u);
+}
+
+// ── SOUND ─────────────────────────────────────────────────────────────
+function playSound(type){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    if(type==='correct'){
+      [523,659,784].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime+i*.12);g.gain.linearRampToValueAtTime(0.3,ctx.currentTime+i*.12+.05);g.gain.linearRampToValueAtTime(0,ctx.currentTime+i*.12+.25);o.start(ctx.currentTime+i*.12);o.stop(ctx.currentTime+i*.12+.3);});
+    }else if(type==='wrong'){
+      const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=200;o.type='sawtooth';g.gain.setValueAtTime(0.2,ctx.currentTime);g.gain.linearRampToValueAtTime(0,ctx.currentTime+.3);o.start();o.stop(ctx.currentTime+.3);
+    }else if(type==='fanfare'){
+      [523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(0,ctx.currentTime+i*.1);g.gain.linearRampToValueAtTime(0.25,ctx.currentTime+i*.1+.05);g.gain.linearRampToValueAtTime(0,ctx.currentTime+i*.1+.3);o.start(ctx.currentTime+i*.1);o.stop(ctx.currentTime+i*.1+.35);});
+    }
+  }catch(e){}
+}
+
+// ── MIC ───────────────────────────────────────────────────────────────
+function toggleMic(){
+  if(!('webkitSpeechRecognition'in window||'SpeechRecognition'in window)){alert("Voice not supported. Please type!");return;}
+  if(micListening){stopMic();return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  micRecognition=new SR();
+  micRecognition.lang='en-US';micRecognition.interimResults=false;micRecognition.maxAlternatives=3;
+  micRecognition.onresult=e=>{const spoken=e.results[0][0].transcript.trim().toUpperCase().replace(/[^A-Z]/g,'');document.getElementById('spell-input').value=spoken;stopMic();setTimeout(()=>checkSpelling(),300);};
+  micRecognition.onerror=()=>stopMic();micRecognition.onend=()=>stopMic();
+  micRecognition.start();micListening=true;
+  const btn=document.getElementById('mic-spell-btn');btn.textContent='🔴';btn.classList.add('listening');
+  zuriSpeak("Say the word now!");
+}
+function stopMic(){
+  if(micRecognition)try{micRecognition.stop();}catch(e){}
+  micListening=false;
+  const btn=document.getElementById('mic-spell-btn');
+  if(btn){btn.textContent='🎤';btn.classList.remove('listening');}
+}
+
+// ── CONFETTI ──────────────────────────────────────────────────────────
+function confetti(){
+  const p=["🎉","⭐","🌟","🎈","✨","💫","🎊","🥳"];
+  for(let i=0;i<22;i++){const d=document.createElement('div');d.className='confetti-piece';d.style.cssText=`left:${i*4.7}%;font-size:${14+(i%3)*8}px;animation:fall ${1+(i%4)*.3}s ease-in ${i*.05}s forwards;`;d.textContent=p[i%p.length];document.body.appendChild(d);setTimeout(()=>d.remove(),3500);}
+}
+
+// ── SCREEN ────────────────────────────────────────────────────────────
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
+  const el=document.getElementById(id);
+  el.classList.add('active');
+  el.style.display=(id==='done')?'flex':'block';
+  stopMic();
+  window.speechSynthesis&&window.speechSynthesis.cancel();
+  updateStars();
+  // Don't auto-speak on every home visit - only on first load
+}
+
+function updateStars(){
+  const hs=document.getElementById('home-stars');
+  const hc=document.getElementById('home-stars-count');
+  if(totalStars>0&&hs&&hc){hs.style.display='block';hc.textContent=totalStars;}
+  ['math','spell'].forEach(p=>{const el=document.getElementById(p+'-stars-badge');if(el)el.textContent=`⭐ ${totalStars}`;});
+}
+
+function setZuri(id,mood){
+  const f={happy:"😊",excited:"🤩",thinking:"🤔",celebrating:"🥳",encouraging:"💪"};
+  const el=document.getElementById(id);if(el)el.textContent=f[mood]||"😊";
+}
+
+// ── NAV ───────────────────────────────────────────────────────────────
+function goToGrade(sub){
+  currentSubject=sub;
+  const bg=sub==="Math"?"linear-gradient(150deg,#FFF4E6,#FFE8D0)":"linear-gradient(150deg,#FFF0F5,#FFE0EC)";
+  document.getElementById('grade').style.background=bg;
+  document.getElementById('grade-title').textContent=(sub==="Math"?"🔢 Math":"✏️ Spelling")+" — Pick Grade!";
+  zuriSpeak("What grade are you in?");
+  showScreen('grade');
+}
+
+function goToDiff(grade){
+  currentGrade=grade;
+  const label=grade==="K"?"Kindergarten":grade==="1st"?"Grade 1":"Grade 2";
+  const bg=currentSubject==="Math"?"linear-gradient(150deg,#FFF4E6,#FFE8D0)":"linear-gradient(150deg,#FFF0F5,#FFE0EC)";
+  document.getElementById('diff').style.background=bg;
+  document.getElementById('diff-title').textContent=(currentSubject==="Math"?"🔢":"✏️")+" "+label+" — Pick Level!";
+  zuriSpeak("How hard? Easy, Medium, or Hard?");
+  showScreen('diff');
+}
+
+function startQuiz(diff){
+  currentDiff=diff;
+  sessionCorrect=0;sessionTotal=0;
+  const labels={easy:"🌱 Easy",medium:"🚀 Medium",hard:"🔥 Hard"};
+  const colors={easy:"#6BCB77",medium:"#4D96FF",hard:"#FF6B35"};
+  if(currentSubject==="Math"){
+    mathQueue=generateMathSet(currentGrade,diff,8);
+    mathIdx=0;mathSelected=null;mathStreak=0;
+    document.getElementById('math-streak').style.display='none';
+    document.getElementById('math-diff-tag').textContent=labels[diff];
+    document.getElementById('math-diff-tag').style.background=colors[diff];
+    renderMath();showScreen('math');
+  }else{
+    spellQueue=shuffle(SPELL_Q[currentGrade][diff]).slice(0,8);
+    spellIdx=0;spellAttempts=0;spellStreak=0;
+    document.getElementById('spell-streak').style.display='none';
+    document.getElementById('spell-diff-tag').textContent=labels[diff];
+    document.getElementById('spell-diff-tag').style.background=colors[diff];
+    renderSpell();showScreen('spelling');
+  }
+}
+
+// ── MATH ──────────────────────────────────────────────────────────────
+function opStyle(op){
+  return{
+    "+":{bg:"linear-gradient(135deg,#00C853,#69F0AE)",shadow:"0 6px 24px rgba(0,200,83,.5),0 0 0 4px #fff,0 0 0 8px #00C853"},
+    "-":{bg:"linear-gradient(135deg,#FF1744,#FF6B6B)",shadow:"0 6px 24px rgba(255,23,68,.5),0 0 0 4px #fff,0 0 0 8px #FF1744"},
+    "×":{bg:"linear-gradient(135deg,#A855F7,#7C3AED)",shadow:"0 6px 24px rgba(168,85,247,.5),0 0 0 4px #fff,0 0 0 8px #A855F7"},
+    "÷":{bg:"linear-gradient(135deg,#4D96FF,#2979FF)",shadow:"0 6px 24px rgba(77,150,255,.5),0 0 0 4px #fff,0 0 0 8px #4D96FF"},
+  }[op]||{bg:"linear-gradient(135deg,#00C853,#69F0AE)",shadow:""};
+}
+
+function renderMath(){
+  const q=mathQueue[mathIdx];mathSelected=null;
+  setZuri('math-zuri','happy');
+  const bubble=document.getElementById('math-bubble');
+  bubble.textContent=q.op==="+"?"How many altogether? 🍽️":"How many are left? 🍽️";
+  bubble.style.cssText="flex:1;background:#F5F0FF;border-radius:4px 20px 20px 20px;padding:12px 16px;font-size:16px;font-weight:800;color:#2D2D2D;border:2px solid #DDD4FF;min-height:46px;display:flex;align-items:center;";
+  if(q.type==="fruit"){
+    document.getElementById('left-fruits').innerHTML= Array.from({length:q.a},()=>`<span style="font-size:clamp(18px,5vw,28px);line-height:1.2;">${q.emoji}</span>`).join('');
+    document.getElementById('right-fruits').innerHTML=Array.from({length:q.b},()=>`<span style="font-size:clamp(18px,5vw,28px);line-height:1.2;">${q.emoji}</span>`).join('');
+  }else{
+    document.getElementById('left-fruits').innerHTML= `<span style="font-size:clamp(48px,11vw,76px);font-weight:900;font-family:'Fredoka One',cursive;color:#2D2D2D;">${q.a}</span>`;
+    document.getElementById('right-fruits').innerHTML=`<span style="font-size:clamp(48px,11vw,76px);font-weight:900;font-family:'Fredoka One',cursive;color:#2D2D2D;">${q.b}</span>`;
+    bubble.textContent="What is the answer? 🔢";
+  }
+  const os=opStyle(q.op);
+  document.getElementById('op-btn').textContent=q.op;
+  document.getElementById('op-btn').style.cssText=`width:78px;height:78px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:52px;font-weight:900;color:#fff;font-family:'Fredoka One',cursive;line-height:1;animation:pulse 1.5s ease-in-out infinite;background:${os.bg};box-shadow:${os.shadow};`;
+  const ab=document.getElementById('answer-box');
+  ab.textContent="?";ab.style.background="linear-gradient(135deg,#E8E0FF,#DDD4FF)";ab.style.color="#A855F7";ab.style.fontSize="32px";
+  const choices=makeChoices(q.ans);
+  const fs=q.ans>99?"20px":q.ans>20?"26px":"34px";
+  document.getElementById('choices-grid').innerHTML=choices.map(c=>`<button class="choice-btn" style="font-size:${fs}" onclick="pickMath(${c},${q.ans})">${c}</button>`).join('');
+  document.getElementById('math-next-btn').style.display='none';
+  document.getElementById('math-progress-tag').textContent=`${mathIdx+1}/${mathQueue.length}`;
+  document.getElementById('math-progress-fill').style.width=`${((mathIdx+1)/mathQueue.length)*100}%`;
+  const opW={"+":"plus","-":"minus","×":"times","÷":"divided by"};
+  lastMathQ=`What is ${q.a} ${opW[q.op]} ${q.b}?`;
+  setTimeout(()=>zuriSpeak(lastMathQ),400);
+}
+
+function pickMath(choice,ans){
+  if(mathSelected!==null)return;
+  sessionTotal++;
+  const ab=document.getElementById('answer-box');
+  ab.textContent=choice;
+  const bubble=document.getElementById('math-bubble');
+  if(choice===ans){
+    mathSelected=choice;sessionCorrect++;
+    ab.style.background="#6BCB77";ab.style.color="#fff";
+    const msg=CHEERS[Math.floor(Math.random()*CHEERS.length)];
+    bubble.textContent=msg;bubble.style.background="#E8F8EF";bubble.style.borderColor="#6BCB77";
+    setZuri('math-zuri','celebrating');
+    totalStars++;mathStreak++;updateStars();
+    playSound('correct');confetti();
+    if(mathStreak>=2){const s=document.getElementById('math-streak');s.style.display='inline';s.textContent=`🔥 ${mathStreak}!`;}
+    setTimeout(()=>zuriSpeak(msg.replace(/[🌟⭐🎉🧠🚀✋🥳🌈]/g,'')),300);
+    document.getElementById('choices-grid').innerHTML='';
+    const nb=document.getElementById('math-next-btn');
+    nb.style.display='block';
+    nb.textContent=mathIdx+1>=mathQueue.length?"See Results! 🏆":"Next! 🚀";
+  }else{
+    ab.style.background="#FF6B6B";ab.style.color="#fff";
+    setTimeout(()=>{ab.textContent="?";ab.style.background="linear-gradient(135deg,#E8E0FF,#DDD4FF)";ab.style.color="#A855F7";},800);
+    const msg=RETRY[Math.floor(Math.random()*RETRY.length)];
+    bubble.textContent=msg;bubble.style.background="#FFF0F0";bubble.style.borderColor="#FF9090";
+    setZuri('math-zuri','encouraging');
+    mathStreak=0;document.getElementById('math-streak').style.display='none';
+    playSound('wrong');
+    const eq=document.getElementById('math-equation');eq.style.animation='shake .4s ease';setTimeout(()=>eq.style.animation='',500);
+    setTimeout(()=>zuriSpeak(msg.replace(/[💪🌈🎯⭐]/g,'')),300);
+    document.getElementById('choices-grid').querySelectorAll('button').forEach(b=>{if(parseInt(b.textContent)===choice){b.style.background="#FF6B6B";b.style.color="#fff";b.disabled=true;setTimeout(()=>{b.style.background="linear-gradient(135deg,#F0EEFF,#E8DFFF)";b.style.color="#A855F7";b.disabled=false;},800);}});
+  }
+}
+
+function mathNext(){if(++mathIdx>=mathQueue.length)showDone();else renderMath();}
+
+// ── SPELLING ──────────────────────────────────────────────────────────
+function renderSpell(){
+  const q=spellQueue[spellIdx];spellAttempts=0;
+  setZuri('spell-zuri','happy');
+  document.getElementById('spell-bubble').textContent="Spell the word! ✏️";
+  document.getElementById('spell-bubble').style.cssText="flex:1;background:#FFF0F5;border-radius:4px 20px 20px 20px;padding:12px 16px;font-size:16px;font-weight:800;color:#2D2D2D;border:2px solid #FFD0E8;";
+  document.getElementById('spell-emoji').textContent=q.img;
+  document.getElementById('spell-hint-box').style.display='none';
+  document.getElementById('spell-hint-btn').style.display='none';
+  document.getElementById('spell-next-btn').style.display='none';
+  document.getElementById('spell-input-row').style.display='flex';
+  document.getElementById('spell-input').value='';
+  document.getElementById('spell-progress-tag').textContent=`${spellIdx+1}/${spellQueue.length}`;
+  document.getElementById('spell-progress-fill').style.width=`${((spellIdx+1)/spellQueue.length)*100}%`;
+  setTimeout(()=>zuriSpeak(`Can you spell: ${q.word}?`),400);
+}
+
+function checkSpelling(){
+  const input=document.getElementById('spell-input');
+  const ans=input.value.trim().toUpperCase();if(!ans)return;
+  const q=spellQueue[spellIdx];
+  const bubble=document.getElementById('spell-bubble');
+  sessionTotal++;
+  if(ans===q.word){
+    sessionCorrect++;
+    const msg=CHEERS[Math.floor(Math.random()*CHEERS.length)];
+    bubble.textContent=msg;bubble.style.background="#E8F8EF";bubble.style.borderColor="#6BCB77";
+    setZuri('spell-zuri','celebrating');
+    const earned=spellAttempts===0?3:spellAttempts===1?2:1;
+    totalStars+=earned;spellStreak++;updateStars();
+    playSound('correct');confetti();
+    if(spellStreak>=2){const s=document.getElementById('spell-streak');s.style.display='inline';s.textContent=`🔥 ${spellStreak}!`;}
+    setTimeout(()=>zuriSpeak(msg.replace(/[🌟⭐🎉🧠🚀✋🥳🌈]/g,'')),300);
+    document.getElementById('spell-input-row').style.display='none';
+    document.getElementById('spell-hint-btn').style.display='none';
+    const nb=document.getElementById('spell-next-btn');
+    nb.style.display='block';
+    nb.textContent=spellIdx+1>=spellQueue.length?"See Results! 🏆":"Next! 🚀";
+  }else{
+    const msg=RETRY[Math.floor(Math.random()*RETRY.length)];
+    bubble.textContent=msg;bubble.style.background="#FFF8E6";bubble.style.borderColor="#FFD93D";
+    setZuri('spell-zuri','encouraging');
+    spellAttempts++;spellStreak=0;document.getElementById('spell-streak').style.display='none';
+    playSound('wrong');
+    input.value='';setTimeout(()=>input.focus(),50);
+    if(spellAttempts>=1)document.getElementById('spell-hint-btn').style.display='block';
+    setTimeout(()=>zuriSpeak(msg.replace(/[💪🌈🎯⭐]/g,'')),300);
+  }
+}
+
+function showSpellHint(){
+  const q=spellQueue[spellIdx];
+  document.getElementById('spell-hint-text').textContent=q.hint;
+  document.getElementById('spell-hint-box').style.display='flex';
+  document.getElementById('spell-hint-btn').style.display='none';
+  zuriSpeak(`Hint! ${q.hint.split('-').join('. ')}`);
+}
+
+function spellNext(){stopMic();if(++spellIdx>=spellQueue.length)showDone();else renderSpell();}
+
+// ── DONE ──────────────────────────────────────────────────────────────
+function showDone(){
+  const pct=sessionTotal>0?Math.round((sessionCorrect/sessionTotal)*100):0;
+  const stars='⭐'.repeat(Math.min(5,Math.ceil(pct/20)));
+  document.getElementById('done-stars-display').textContent=stars;
+  document.getElementById('done-msg').textContent=`${sessionCorrect} out of ${sessionTotal} correct! Total: ⭐ ${totalStars}`;
+  playSound('fanfare');confetti();
+  setTimeout(()=>zuriSpeak(`Wow! You finished! ${sessionCorrect} out of ${sessionTotal} correct! You are amazing!`),500);
+  showScreen('done');
+}
+
+// ── INTRO ON FIRST LOAD ──────────────────────────────────────────────
+let introDone = false;
+function playIntro(){
+  if(introDone) return;
+  introDone = true;
+  zuriSpeak("Hi! I am Zuri! Tap Math or Spelling to start!");
+}
+window.addEventListener('load', ()=>{
+  if(!window.speechSynthesis) return;
+  const voices = window.speechSynthesis.getVoices();
+  if(voices.length > 0){
+    setTimeout(playIntro, 600);
+  } else {
+    window.speechSynthesis.addEventListener('voiceschanged', ()=>setTimeout(playIntro, 400), {once:true});
+  }
+});
+</script>
+</body>
+</html>
