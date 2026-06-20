@@ -367,12 +367,19 @@ function setZuri(id,mood){
 }
 
 // ── NAV ───────────────────────────────────────────────────────────────
+let everSpokenBefore = false;
 function goToGrade(sub){
   currentSubject=sub;
   const bg=sub==="Math"?"linear-gradient(150deg,#FFF4E6,#FFE8D0)":"linear-gradient(150deg,#FFF0F5,#FFE0EC)";
   document.getElementById('grade').style.background=bg;
   document.getElementById('grade-title').textContent=(sub==="Math"?"🔢 Math":"✏️ Spelling")+" — Pick Grade!";
-  zuriSpeak("What grade are you in?");
+  // On the very first tap of the whole session, greet first, then ask the question.
+  if(!everSpokenBefore){
+    everSpokenBefore = true;
+    zuriSpeak("Hi! I am Zuri! What grade are you in?");
+  } else {
+    zuriSpeak("What grade are you in?");
+  }
   showScreen('grade');
 }
 
@@ -558,21 +565,9 @@ function showDone(){
 // ── INTRO ON FIRST INTERACTION ───────────────────────────────────────
 // Browsers block autoplay speech until the user interacts with the page,
 // so we trigger the intro on the very first tap/click anywhere instead of on load.
-let introDone = false;
-function playIntro(){
-  if(introDone) return;
-  introDone = true;
-  // Chrome sometimes needs speechSynthesis "woken up" with a resume call
-  if(window.speechSynthesis && window.speechSynthesis.paused){
-    window.speechSynthesis.resume();
-  }
-  setTimeout(()=>{
-    zuriSpeak("Hi! I am Zuri! Tap Math or Spelling to start!");
-  }, 100);
-}
-document.addEventListener('pointerdown', playIntro, {once:true});
-document.addEventListener('touchstart', playIntro, {once:true, passive:true});
-document.addEventListener('click', playIntro, {once:true});
+// No separate "intro greeting" needed -- the first real action (tapping
+// Math/Spelling, which calls goToGrade) naturally speaks "What grade are you in?"
+// as the kid's first voice moment. This avoids any race with speechSynthesis.cancel().
 </script>
 </body>
 </html>
