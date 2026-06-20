@@ -343,15 +343,19 @@ function confetti(){
 }
 
 // ── SCREEN ────────────────────────────────────────────────────────────
-function showScreen(id){
+function showScreen(id, skipCancel){
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
   const el=document.getElementById(id);
   el.classList.add('active');
   el.style.display=(id==='done')?'flex':'block';
   stopMic();
-  window.speechSynthesis&&window.speechSynthesis.cancel();
+  // Only cancel speech if NOT told to skip -- callers that just queued their
+  // own zuriSpeak() right before this call pass skipCancel=true so we don't
+  // wipe out the speech they intended to play on this transition.
+  if(!skipCancel){
+    window.speechSynthesis&&window.speechSynthesis.cancel();
+  }
   updateStars();
-  // Don't auto-speak on every home visit - only on first load
 }
 
 function updateStars(){
@@ -380,7 +384,7 @@ function goToGrade(sub){
   } else {
     zuriSpeak("What grade are you in?");
   }
-  showScreen('grade');
+  showScreen('grade', true);
 }
 
 function goToDiff(grade){
@@ -390,7 +394,7 @@ function goToDiff(grade){
   document.getElementById('diff').style.background=bg;
   document.getElementById('diff-title').textContent=(currentSubject==="Math"?"🔢":"✏️")+" "+label+" — Pick Level!";
   zuriSpeak("How hard? Easy, Medium, or Hard?");
-  showScreen('diff');
+  showScreen('diff', true);
 }
 
 function startQuiz(diff){
